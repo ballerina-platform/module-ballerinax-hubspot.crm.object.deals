@@ -85,12 +85,6 @@ function testUpdateDeal() returns error? {
         test:assertTrue(out.updatedAt !is "");
         test:assertEquals(out.properties["dealname"], "Test Deal Updated");
         test:assertEquals(out.properties["amount"], "200000");
-        // var response = hubspot ->/crm/v3/objects/deals/[dealId].delete();
-        // if response is http:Response {
-        //     test:assertTrue(response.statusCode == 204);
-        // } else {
-        //     test:assertFail("Failed to delete deal");
-        // }
     } else {
         test:assertFail("Failed to update deal");
     }
