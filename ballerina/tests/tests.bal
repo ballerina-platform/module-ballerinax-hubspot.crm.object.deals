@@ -1,7 +1,6 @@
 import ballerina/test;
 import ballerina/oauth2;
 import ballerina/http;
-
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
@@ -20,6 +19,9 @@ ConnectionConfig config = {auth:auth};
 final Client hubspot = check new Client(config, serviceUrl);
 #keep the deal id as reference for other tests after creation
 string dealId = "";
+
+string batchDealId1 = "";
+string batchDealId2 = "";
 
 
 @test:Config 
@@ -62,7 +64,7 @@ function testgetAllDeals() returns error? {
 function testGetDealById() returns error? {
     SimplePublicObject|error deal = hubspot ->/crm/v3/objects/deals/[dealId].get();
     if deal is SimplePublicObject {
-       
+        
         test:assertTrue(deal.id == dealId);
     } else {
         test:assertFail("Failed to get deal");
@@ -155,4 +157,97 @@ function testDeleteDeal() returns error? {
     } else {
         test:assertFail("Failed to delete deal");
     }
+}
+
+@test:Config{
+    dependsOn: [testDeleteDeal]
+}
+function testBatchCreate() returns error?{
+    SimplePublicObjectInputForCreate payload1 = {
+        properties: {
+            "pipeline": "default",
+            "dealname": "Test Deal1",
+            "amount": "100000"
+        }
+    };
+    SimplePublicObjectInputForCreate payload2 = {
+        properties: {
+            "pipeline": "default",
+            "dealname": "Test Deal2",
+            "amount": "200000"
+        }
+    };
+    BatchInputSimplePublicObjectInputForCreate payloads = {
+        inputs: [payload1, payload2]
+    };
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error out = hubspot ->/crm/v3/objects/deals/batch/create.post(payload = payloads);
+
+    if out is BatchResponseSimplePublicObject {
+        test:assertTrue(out.results.length() == 2);
+        batchDealId1 = out.results[0].id;
+        batchDealId2 = out.results[1].id;
+    } else {
+        test:assertFail("Failed to batch create deals");
+    }
+  
+}
+
+@test:Config{
+    dependsOn: [testBatchCreate]
+}
+function testBacthUpdate() returns error?{
+    SimplePublicObjectBatchInput payload1 = {
+        id:batchDealId1,
+        properties: {
+            "dealname": "Test Deal1 Updated",
+            "amount": "300000"
+        }
+    };
+    SimplePublicObjectBatchInput payload2 = {
+        id:batchDealId2,
+        properties: {
+            "dealname": "Test Deal2 Updated",
+            "amount": "400000"
+        }
+    };
+    BatchInputSimplePublicObjectBatchInput payloads = {
+        inputs: [payload1, payload2]
+    };
+   BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error out = hubspot ->/crm/v3/objects/deals/batch/update.post(payload = payloads);
+
+    if out is BatchResponseSimplePublicObject {
+       
+        test:assertTrue(out.results.length() == 2);
+        SimplePublicObject updatedDeal1 = out.results.filter(function (SimplePublicObject deal) returns boolean {
+            return deal.id == batchDealId1;
+        })[0];
+        test:assertEquals(updatedDeal1.properties["dealname"], "Test Deal1 Updated");
+    } else {
+        test:assertFail("Failed to batch update deals");
+    }
+  
+}
+
+@test:Config{
+    dependsOn: [testBacthUpdate]
+}
+function testBatchInputDelete() returns error?{
+    SimplePublicObjectId payload1 = {
+        id: batchDealId1
+    };
+
+    SimplePublicObjectId payload2 = {
+        id: batchDealId2
+    };
+    BatchInputSimplePublicObjectId payload = {
+        inputs: [payload1, payload2]
+    };
+    http:Response|error out = hubspot ->/crm/v3/objects/deals/batch/archive.post(payload = payload);
+
+    if out is http:Response {
+        test:assertTrue(out.statusCode == 204);
+    } else {
+        test:assertFail("Failed to batch delete deals");
+    }
+  
 }
