@@ -19,7 +19,7 @@
       "x-hubspot-introduction" : "Use the deals API to create and manage CRM records that represent transactions with contacts and/or companies. Deals progress through pipeline stages to reflect whether the transaction has been completed, is active, or has otherwise been lost."
     },
     "servers" : [ {
-      "url" : "https://api.hubapi.com"
+      "url" : "https://api.hubapi.com/crm/v3/objects/deals"
     } ],
     "tags" : [ {
       "name" : "Batch"
@@ -31,7 +31,7 @@
       "name" : "Search"
     } ],
     "paths" : {
-      "/crm/v3/objects/deals/batch/read" : {
+      "/batch/read" : {
         "post" : {
           "tags" : [ "Batch" ],
           "summary" : "Read a batch of deals by internal ID, or unique property values",
@@ -90,7 +90,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/{dealId}" : {
+      "/{dealId}" : {
         "get" : {
           "tags" : [ "Basic" ],
           "summary" : "Read",
@@ -274,7 +274,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/merge" : {
+      "/merge" : {
         "post" : {
           "tags" : [ "Merge" ],
           "summary" : "Merge two deals",
@@ -312,7 +312,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/batch/archive" : {
+      "/batch/archive" : {
         "post" : {
           "tags" : [ "Batch" ],
           "summary" : "Archive a batch of deals by ID",
@@ -344,7 +344,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/batch/create" : {
+      "/batch/create" : {
         "post" : {
           "tags" : [ "Batch" ],
           "summary" : "Create a batch of deals",
@@ -392,7 +392,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/batch/update" : {
+      "/batch/update" : {
         "post" : {
           "tags" : [ "Batch" ],
           "summary" : "Update a batch of deals by internal ID, or unique property values",
@@ -440,7 +440,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals" : {
+      "/" : {
         "get" : {
           "tags" : [ "Basic" ],
           "summary" : "List",
@@ -578,7 +578,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/batch/upsert" : {
+      "/batch/upsert" : {
         "post" : {
           "tags" : [ "Batch" ],
           "summary" : "Create or update a batch of deals by unique property values",
@@ -627,7 +627,7 @@
           } ]
         }
       },
-      "/crm/v3/objects/deals/search" : {
+      "/search" : {
         "post" : {
           "tags" : [ "Search" ],
           "operationId" : "post-/crm/v3/objects/deals/search_doSearch",
@@ -746,15 +746,15 @@
           "properties" : {
             "completedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "requestedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "startedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "links" : {
               "type" : "object",
@@ -844,7 +844,7 @@
           "properties" : {
             "completedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "numErrors" : {
               "type" : "integer",
@@ -852,11 +852,11 @@
             },
             "requestedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "startedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "links" : {
               "type" : "object",
@@ -915,15 +915,15 @@
           "properties" : {
             "completedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "requestedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "startedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "links" : {
               "type" : "object",
@@ -977,7 +977,7 @@
             },
             "timestamp" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             }
           }
         },
@@ -1018,7 +1018,7 @@
           "properties" : {
             "createdAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "archived" : {
               "type" : "boolean",
@@ -1026,7 +1026,7 @@
             },
             "archivedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "propertiesWithHistory" : {
               "type" : "object",
@@ -1059,7 +1059,7 @@
             },
             "updatedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             }
           },
           "example" : {
@@ -1223,7 +1223,7 @@
           "properties" : {
             "completedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "numErrors" : {
               "type" : "integer",
@@ -1231,11 +1231,11 @@
             },
             "requestedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "startedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "links" : {
               "type" : "object",
@@ -1356,14 +1356,14 @@
             },
             "createdAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "archived" : {
               "type" : "boolean"
             },
             "archivedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "propertiesWithHistory" : {
               "type" : "object",
@@ -1386,7 +1386,7 @@
             },
             "updatedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             }
           },
           "example" : {
@@ -1470,14 +1470,14 @@
           "properties" : {
             "createdAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "archived" : {
               "type" : "boolean"
             },
             "archivedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             },
             "new" : {
               "type" : "boolean"
@@ -1502,7 +1502,7 @@
             },
             "updatedAt" : {
               "type" : "string",
-              "format" : "date-time"
+              "format" : "datetime"
             }
           }
         },

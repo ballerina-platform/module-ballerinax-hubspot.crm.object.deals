@@ -99,6 +99,13 @@ public type BatchResponseSimplePublicUpsertObjectWithErrors record {
     "PENDING"|"PROCESSING"|"CANCELED"|"COMPLETE" status;
 };
 
+public type BatchReadInputSimplePublicObjectId record {
+    string[] propertiesWithHistory;
+    string idProperty?;
+    SimplePublicObjectId[] inputs;
+    string[] properties;
+};
+
 public type BatchResponseSimplePublicUpsertObject record {
     string completedAt;
     string requestedAt?;
@@ -106,13 +113,6 @@ public type BatchResponseSimplePublicUpsertObject record {
     record {|string...;|} links?;
     SimplePublicUpsertObject[] results;
     "PENDING"|"PROCESSING"|"CANCELED"|"COMPLETE" status;
-};
-
-public type BatchReadInputSimplePublicObjectId record {
-    string[] propertiesWithHistory;
-    string idProperty?;
-    SimplePublicObjectId[] inputs;
-    string[] properties;
 };
 
 public type ValueWithTimestamp record {
@@ -301,13 +301,13 @@ public type ClientHttp1Settings record {|
     ProxyConfig proxy?;
 |};
 
-public type BatchInputSimplePublicObjectBatchInput record {
-    SimplePublicObjectBatchInput[] inputs;
-};
-
 public type PreviousPage record {
     string before;
     string link?;
+};
+
+public type BatchInputSimplePublicObjectBatchInput record {
+    SimplePublicObjectBatchInput[] inputs;
 };
 
 public type BatchInputSimplePublicObjectInputForCreate record {
