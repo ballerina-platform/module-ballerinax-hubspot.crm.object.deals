@@ -284,6 +284,9 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "observe"}
 ]
+modules = [
+	{org = "ballerinai", packageName = "observe", moduleName = "observe"}
+]
 
 [[package]]
 org = "ballerinax"
@@ -302,15 +305,16 @@ modules = [
 
 [[package]]
 org = "ravinduwe"
-name = "deal_creator"
+name = "manage_deals"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "oauth2"},
+	{org = "ballerinai", name = "observe"},
 	{org = "ballerinax", name = "hubspot.crm.obj.deals"}
 ]
 modules = [
-	{org = "ravinduwe", packageName = "deal_creator", moduleName = "deal_creator"}
+	{org = "ravinduwe", packageName = "manage_deals", moduleName = "manage_deals"}
 ]
 
