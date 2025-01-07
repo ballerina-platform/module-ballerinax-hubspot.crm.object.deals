@@ -34,7 +34,7 @@ function testCreateDeals() returns error? {
         }
     };
 
-    SimplePublicObject|error out = hubspot->/.post(payload = payload);
+    SimplePublicObject|error out =hubspot->/.post(payload = payload);
 
     if out is SimplePublicObject {
         dealId = out.id;
@@ -128,6 +128,8 @@ function testMergeDeals() returns error? {
     }
 
 };
+
+//for the search test case you should alraedy have some deals in the hubspot as it could take some time to index the deals
 
 @test:Config {
     dependsOn: [testUpdateDeal]

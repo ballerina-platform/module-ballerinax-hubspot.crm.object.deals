@@ -1,0 +1,5 @@
+[[dependency]]
+org = "ballerinax"
+name = "hubspot.crm.obj.deals"
+version = "0.1.0"
+repository = "local"

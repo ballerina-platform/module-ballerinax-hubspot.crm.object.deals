@@ -1,11 +1,9 @@
 ## Overview
-[HubSpot](https://developers.hubspot.com/docs/reference/api) is an AI-powered customer platform with all the software, integrations, and resources you need to connect your marketing, sales, and customer service
+[HubSpot](https://developers.hubspot.com/docs/reference/api) is is an AI-powered customer platform.
 
 The `ballerinax/hubspot.crm.object.deals` package offers APIs to connect and interact with [HubSpot API](https://developers.hubspot.com/docs/reference/api) endpoints, specifically based on [HubSpot API v3](https://developers.hubspot.com/docs/reference/api).
 
 ## Setup guide
-
-[//]: # "TODO: Add detailed steps to obtain credentials and configure the module."
 
 To use the HubSpot Marketing Events connector, you must have access to the HubSpot API through a HubSpot developer account and a HubSpot App under it. Therefore you need to register for a developer account at HubSpot if you don't have one already.
 
@@ -76,37 +74,55 @@ Before proceeding with the Quickstart, ensure you have obtained the Access Token
 
    Replace the `<YOUR_CLIENT_ID>`, `<YOUR_REDIRECT_URI>` and `<YOUR_SCOPES>` with your specific value.
 
-2. Paste it in the browser and select your developer test account to intall the app when prompted.
+2. Run the Following Ballerina Code Snippet to start the local server which will accept your Oath callbacks;
+
+   ```ballerina
+   import ballerina/http;
+   import ballerina/io;
+   
+   //edit this before running
+   string clientId = "<Client ID>";
+   string clientSecret = "<Client Secret>";
+
+   public function getRefresh(string cd) returns json|error {
+
+      http:Client hubendpoint = check  new("https://api.hubapi.com");
+      string payload = string `grant_type=authorization_code&client_id=${ClientId}&client_secret={clientSecret}&redirect_uri=http://localhost:9090&code=${cd}`;
+
+      // Send the token request
+      json|error response = hubendpoint->post("/oauth/v1/token", payload, {
+         "Content-Type": "application/x-www-form-urlencoded"
+      });
+
+      return response;
+
+   };
+
+   service / on new http:Listener(9090) {
+    resource function get .(http:Caller caller, http:Request req) returns error? {
+        // Extract the "code" query parameter from the URL
+        string? code = req.getQueryParamValue("code");
+
+        if code is string {
+            // Log the received code
+            io:println("Authorization code received: " + code);
+            // Respond to the client with the received code
+            check caller->respond("Received code: " + code);
+            json|error res = getRefresh(code);
+            io:println(res);
+        } else {
+            // Respond with an error message if no code is found
+            check caller->respond("Authorization code not found.");
+        }
+    }
+   };
+   ```
+
+3. Paste it in the browser and select your developer test account to intall the app when prompted.
     
    <img src="../docs/resources/install_app.png" alt="Hubspot app creation 1 testacc3" style="width: 70%;">
 
-3. A code will be displayed in the browser. Copy the code.
-
-   ```
-   Received code: na1-129d-860c-xxxx-xxxx-xxxxxxxxxxxx
-   ```
-
-4. Run the following curl command. Replace the `<YOUR_CLIENT_ID>`, `<YOUR_REDIRECT_URI`> and `<YOUR_CLIENT_SECRET>` with your specific value. Use the code you received in the above step 3 as the `<CODE>`.
-
-   - Linux/macOS
-
-     ```bash
-     curl --request POST \
-     --url https://api.hubapi.com/oauth/v1/token \
-     --header 'content-type: application/x-www-form-urlencoded' \
-     --data 'grant_type=authorization_code&code=<CODE>&redirect_uri=<YOUR_REDIRECT_URI>&client_id=<YOUR_CLIENT_ID>&client_secret=<YOUR_CLIENT_SECRET>'
-     ```
-
-   - Windows
-
-     ```bash
-     curl --request POST ^
-     --url https://api.hubapi.com/oauth/v1/token ^
-     --header 'content-type: application/x-www-form-urlencoded' ^
-     --data 'grant_type=authorization_code&code=<CODE>&redirect_uri=<YOUR_REDIRECT_URI>&client_id=<YOUR_CLIENT_ID>&client_secret=<YOUR_CLIENT_SECRET>'
-     ```
-
-   This command will return the access token necessary for API calls.
+4. After the installation, you will be redirected to the localhost server you started in the previous step. The server will print the authorization code in the console.
 
    ```json
    {
@@ -117,35 +133,45 @@ Before proceeding with the Quickstart, ensure you have obtained the Access Token
    }
    ```
 
-5. Store the access token securely for use in your application.
+5. Store the `refresh_token` securely for use in your application.
 
 ## Quickstart
 
-[//]: # "TODO: Add a quickstart guide to demonstrate a basic functionality of the module, including sample code snippets."
 
-To use the `HubSpot Marketing Events` connector in your Ballerina application, update the `.bal` file as follows:
+To use the `HubSpot Deals` connector in your Ballerina application, update the `.bal` file as follows:
 
 ### Step 1: Import the module
 
-Import the `hubspot.marketing.events` module.
+Import the `hubspot.crm.obj.deals` module.
 
 ```
-import ballerinax/hubspot.marketing.events as hsmevents;
+import ballerinax/hubspot.crm.obj.deals;
 ```
 
 ### Step 2: Instantiate a new connector
 
 1. Create a `config.toml` file and, configure the obtained credentials in the above steps as follows:
-
+   ```toml
+   clientId = "<Client ID>"
+   clientSecret = "<Client Secret>"
+   refreshToken = "<Access Token>"
    ```
-   token = "<Access Token>"
+
+2. Create a `deals:ConnectionConfig` with the obtained access token and initialize the connector with it.
+
+   ```ballerina
+   //auth confguration for hubspot
+   deals:OAuth2RefreshTokenGrantConfig auth = {
+      clientId: clientId,
+      clientSecret: clientSecret,
+      refreshToken: refreshToken,
+      credentialBearer: oauth2:POST_BODY_BEARER
+      };
+
+   deals:ConnectionConfig config = {auth: auth};
+   //authorized http client to access hubspot
+   final deals:Client hubspot = check new deals:Client(config);
    ```
-
-   <!-- TODO Update -->
-
-2. Create a `hsmevents:ConnectionConfig` with the obtained access token and initialize the connector with it.
-
-<!-- TODO Add Screenshot -->
 
 ### Step 3: Use Connector Operations
 
@@ -153,6 +179,9 @@ Now, utilize the available connector operations.
 
 ## Examples
 
-The `HubSpot Marketing Events` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-hubspot.marketing.events/tree/main/examples/), covering the following use cases:
+The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples illustrating usage in various scenarios.Explore these [examples](/examples), covering the following use cases:
 
-[//]: # "TODO: Add examples"
+1. [Manage Deals](/examples/sales-pipeline) - see how the Hubspot API can be used to create deal and manage it through the sales pipeline.
+2. [Count Deals](/examples/count-deals) - see how the Hubspot API can be used to count the number of deals in each stages of sales pipeline.
+
+

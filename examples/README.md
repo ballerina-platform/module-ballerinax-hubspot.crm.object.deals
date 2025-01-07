@@ -1,14 +1,20 @@
 # Examples
 
-The `ballerinax/hubspot.crm.object.deals` connector provides practical examples illustrating usage in various scenarios.
+The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples illustrating usage in various scenarios.
 
-[//]: # (TODO: Add examples)
-1. 
-2. 
+1. [Manage Deals](/examples/sales-pipeline) - see how the Hubspot API can be used to create deal and manage it through the sales pipeline.
+2. [Count Deals](/examples/count-deals) - see how the Hubspot API can be used to count the number of deals in each stages of sales pipeline.
 
 ## Prerequisites
 
-[//]: # (TODO: Add prerequisites)
+1. Generate hubspot credentials to authenticate the connector as described in the [setup guide](README.md).
+
+2. For each example, create a `Config.toml` file the related configuration. Here's an example of how your `Config.toml `file should look:
+    ```toml
+    clientId = "<Client ID>"
+    clientSecret = "<Client Secret>"
+    refreshToken = "<Access Token>"
+    ```
 
 ## Running an example
 
