@@ -1,3 +1,11 @@
+[package]
+org = "ravinduwe"
+name = "manage_deals"
+version = "0.1.0"
+distribution = "2201.10.3"
+
+[build-options]
+observabilityIncluded = true
 [[dependency]]
 org = "ballerinax"
 name = "hubspot.crm.obj.deals"
