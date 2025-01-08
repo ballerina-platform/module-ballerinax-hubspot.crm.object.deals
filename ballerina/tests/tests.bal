@@ -29,7 +29,7 @@ OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-final Client hubSpotDeals = check new ({ auth });
+final Client hubSpotDeals = check new ({auth});
 # keep the deal id as reference for other tests after creation
 string dealId = "";
 
@@ -50,7 +50,6 @@ function testCreateDeals() returns error? {
     SimplePublicObject out = check hubSpotDeals->/.post(payload = payload);
     dealId = out.id;
     test:assertTrue(out.createdAt !is "");
-    
 
 };
 
@@ -58,9 +57,8 @@ function testCreateDeals() returns error? {
     dependsOn: [testCreateDeals]
 }
 function testgetAllDeals() returns error? {
-    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubSpotDeals->/;
+    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check hubSpotDeals->/;
     test:assertTrue(deals.results.length() > 0);
-    
 
 };
 
@@ -68,7 +66,7 @@ function testgetAllDeals() returns error? {
     dependsOn: [testgetAllDeals]
 }
 function testGetDealById() returns error? {
-    SimplePublicObject deal =check hubSpotDeals->/[dealId].get();
+    SimplePublicObject deal = check hubSpotDeals->/[dealId].get();
     io:println(deal);
     test:assertTrue(deal.id == dealId);
 };
@@ -84,7 +82,7 @@ function testUpdateDeal() returns error? {
         }
     };
 
-    SimplePublicObject out = check  hubSpotDeals->/[dealId].patch(payload = payload);
+    SimplePublicObject out = check hubSpotDeals->/[dealId].patch(payload = payload);
 
     test:assertTrue(out.updatedAt !is "");
     test:assertEquals(out.properties["dealname"], "Test Deal Updated");
@@ -106,7 +104,7 @@ function testMergeDeals() returns error? {
         }
     };
 
-    SimplePublicObject out = check  hubSpotDeals->/.post(payload = payload);
+    SimplePublicObject out = check hubSpotDeals->/.post(payload = payload);
 
     dealId2 = out.id;
     PublicMergeInput payload2 = {
@@ -114,11 +112,10 @@ function testMergeDeals() returns error? {
         primaryObjectId: dealId
     };
     SimplePublicObject mergeOut = check hubSpotDeals->/merge.post(payload = payload2);
-        
+
     test:assertNotEquals(mergeOut.properties["hs_merged_object_ids"], "");
     dealId = mergeOut.id;
 
-   
 };
 
 //for the search test case you should alraedy have some deals in the hubspot as it could take some time to index the deals
@@ -131,18 +128,18 @@ function testSearchDeals() returns error? {
         query: "test"
     };
     CollectionResponseWithTotalSimplePublicObjectForwardPaging search = check hubSpotDeals->/search.post(payload = qr);
-        test:assertTrue(search.results.length() > 0);
- 
+    test:assertTrue(search.results.length() > 0);
+
 };
 
 @test:Config {
     dependsOn: [testSearchDeals]
 }
 function testDeleteDeal() returns error? {
-    
+
     http:Response response = check hubSpotDeals->/[dealId].delete();
     test:assertTrue(response.statusCode == 204);
- 
+
 }
 
 @test:Config {
@@ -170,7 +167,6 @@ function testBatchCreate() returns error? {
     test:assertTrue(out.results.length() == 2);
     batchDealId1 = out.results[0].id;
     batchDealId2 = out.results[1].id;
-    
 
 }
 
@@ -199,14 +195,11 @@ function testBacthUpdate() returns error? {
     };
     BatchResponseSimplePublicObject out = check hubSpotDeals->/batch/update.post(payload = payloads);
 
-
-
-        test:assertTrue(out.results.length() == 2);
-        SimplePublicObject updatedDeal1 = out.results.filter(function(SimplePublicObject deal) returns boolean {
-            return deal.id == batchDealId1;
-        })[0];
-        test:assertEquals(updatedDeal1.properties["dealname"], "Test Deal1 Updated");
-
+    test:assertTrue(out.results.length() == 2);
+    SimplePublicObject updatedDeal1 = out.results.filter(function(SimplePublicObject deal) returns boolean {
+        return deal.id == batchDealId1;
+    })[0];
+    test:assertEquals(updatedDeal1.properties["dealname"], "Test Deal1 Updated");
 
 }
 
@@ -229,7 +222,7 @@ function testBatchUpsert() returns error? {
     BatchInputSimplePublicObjectBatchInputUpsert payloads = {
         inputs: [payload1]
     };
-    BatchResponseSimplePublicUpsertObject out = check  hubSpotDeals->/batch/upsert.post(payload = payloads);
+    BatchResponseSimplePublicUpsertObject out = check hubSpotDeals->/batch/upsert.post(payload = payloads);
     io:println(out);
     test:assertTrue(out.results.length() == 1);
 
@@ -251,7 +244,6 @@ function testBatchInputDelete() returns error? {
     };
     http:Response out = check hubSpotDeals->/batch/archive.post(payload = payload);
     test:assertTrue(out.statusCode == 204);
-
 
 }
 
