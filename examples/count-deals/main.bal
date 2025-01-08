@@ -28,7 +28,7 @@ deals:OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-final deals:Client hubspot = check new ({auth});
+final deals:Client hubSpotDeals = check new ({auth});
 
 public function main() {
     deals:SimplePublicObjectInputForCreate payload1 = {
@@ -51,7 +51,7 @@ public function main() {
         inputs: [payload1, payload2]
     };
 
-    deals:BatchResponseSimplePublicObject|deals:BatchResponseSimplePublicObjectWithErrors|error out = hubspot->/batch/create.post(payload = payloads);
+    deals:BatchResponseSimplePublicObject|deals:BatchResponseSimplePublicObjectWithErrors|error out = hubSpotDeals->/batch/create.post(payload = payloads);
 
     if out is deals:BatchResponseSimplePublicObject {
         io:println("Batch Deal 1 created with id: " + out.results[0].id);
@@ -62,7 +62,7 @@ public function main() {
         return;
     }
 
-    deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error deals = hubspot->/;
+    deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error deals = hubSpotDeals->/;
     if deals is deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging {
 
         io:println(`Nuber of retreived deals ${deals.results.length()}`);

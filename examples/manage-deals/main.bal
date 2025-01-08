@@ -29,7 +29,7 @@ deals:OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-final deals:Client hubspot = check new ({auth});
+final deals:Client hubSpot = check new ({auth});
 
 public function main() {
 
@@ -44,7 +44,7 @@ public function main() {
         }
     };
 
-    deals:SimplePublicObject|error deal = hubspot->/.post(payload = payload);
+    deals:SimplePublicObject|error deal = hubSpot->/.post(payload = payload);
 
     if deal is deals:SimplePublicObject {
         dealId = deal.id;
@@ -62,7 +62,7 @@ public function main() {
         }
     };
 
-    deals:SimplePublicObject|error newDeal = hubspot->/[dealId].patch(payload = newDealDetails);
+    deals:SimplePublicObject|error newDeal = hubSpot->/[dealId].patch(payload = newDealDetails);
 
     if newDeal is deals:SimplePublicObject {
         io:println("Successfully updated the deal into a new Stage");
@@ -72,7 +72,7 @@ public function main() {
     }
 
     //Now all the deal specific things are over time to delete it
-    var response = hubspot->/[dealId].delete();
+    var response = hubSpot->/[dealId].delete();
 
     if response is http:Response {
         io:println("sucessfully deleted the deal");
