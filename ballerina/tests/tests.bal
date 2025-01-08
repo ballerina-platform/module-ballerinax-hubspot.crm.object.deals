@@ -29,7 +29,7 @@ OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-final Client hubSpot = check new ({ auth });
+final Client hubSpotDeals = check new ({ auth });
 # keep the deal id as reference for other tests after creation
 string dealId = "";
 
@@ -47,7 +47,7 @@ function testCreateDeals() returns error? {
         }
     };
 
-    SimplePublicObject out = check hubSpot->/.post(payload = payload);
+    SimplePublicObject out = check hubSpotDeals->/.post(payload = payload);
     dealId = out.id;
     test:assertTrue(out.createdAt !is "");
     
@@ -58,7 +58,7 @@ function testCreateDeals() returns error? {
     dependsOn: [testCreateDeals]
 }
 function testgetAllDeals() returns error? {
-    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubSpot->/;
+    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubSpotDeals->/;
     test:assertTrue(deals.results.length() > 0);
     
 
@@ -68,7 +68,7 @@ function testgetAllDeals() returns error? {
     dependsOn: [testgetAllDeals]
 }
 function testGetDealById() returns error? {
-    SimplePublicObject deal =check hubSpot->/[dealId].get();
+    SimplePublicObject deal =check hubSpotDeals->/[dealId].get();
     io:println(deal);
     test:assertTrue(deal.id == dealId);
 };
@@ -84,7 +84,7 @@ function testUpdateDeal() returns error? {
         }
     };
 
-    SimplePublicObject out = check  hubSpot->/[dealId].patch(payload = payload);
+    SimplePublicObject out = check  hubSpotDeals->/[dealId].patch(payload = payload);
 
     test:assertTrue(out.updatedAt !is "");
     test:assertEquals(out.properties["dealname"], "Test Deal Updated");
@@ -106,14 +106,14 @@ function testMergeDeals() returns error? {
         }
     };
 
-    SimplePublicObject out = check  hubSpot->/.post(payload = payload);
+    SimplePublicObject out = check  hubSpotDeals->/.post(payload = payload);
 
     dealId2 = out.id;
     PublicMergeInput payload2 = {
         objectIdToMerge: dealId2,
         primaryObjectId: dealId
     };
-    SimplePublicObject mergeOut = check hubSpot->/merge.post(payload = payload2);
+    SimplePublicObject mergeOut = check hubSpotDeals->/merge.post(payload = payload2);
         
     test:assertNotEquals(mergeOut.properties["hs_merged_object_ids"], "");
     dealId = mergeOut.id;
@@ -130,7 +130,7 @@ function testSearchDeals() returns error? {
     PublicObjectSearchRequest qr = {
         query: "test"
     };
-    CollectionResponseWithTotalSimplePublicObjectForwardPaging search = check hubSpot->/search.post(payload = qr);
+    CollectionResponseWithTotalSimplePublicObjectForwardPaging search = check hubSpotDeals->/search.post(payload = qr);
         test:assertTrue(search.results.length() > 0);
  
 };
@@ -140,7 +140,7 @@ function testSearchDeals() returns error? {
 }
 function testDeleteDeal() returns error? {
     
-    http:Response response = check hubSpot->/[dealId].delete();
+    http:Response response = check hubSpotDeals->/[dealId].delete();
     test:assertTrue(response.statusCode == 204);
  
 }
@@ -166,7 +166,7 @@ function testBatchCreate() returns error? {
     BatchInputSimplePublicObjectInputForCreate payloads = {
         inputs: [payload1, payload2]
     };
-    BatchResponseSimplePublicObject out = check hubSpot->/batch/create.post(payload = payloads);
+    BatchResponseSimplePublicObject out = check hubSpotDeals->/batch/create.post(payload = payloads);
     test:assertTrue(out.results.length() == 2);
     batchDealId1 = out.results[0].id;
     batchDealId2 = out.results[1].id;
@@ -197,7 +197,7 @@ function testBacthUpdate() returns error? {
     BatchInputSimplePublicObjectBatchInput payloads = {
         inputs: [payload1, payload2]
     };
-    BatchResponseSimplePublicObject out = check hubSpot->/batch/update.post(payload = payloads);
+    BatchResponseSimplePublicObject out = check hubSpotDeals->/batch/update.post(payload = payloads);
 
 
 
@@ -229,7 +229,7 @@ function testBatchUpsert() returns error? {
     BatchInputSimplePublicObjectBatchInputUpsert payloads = {
         inputs: [payload1]
     };
-    BatchResponseSimplePublicUpsertObject out = check  hubSpot->/batch/upsert.post(payload = payloads);
+    BatchResponseSimplePublicUpsertObject out = check  hubSpotDeals->/batch/upsert.post(payload = payloads);
     io:println(out);
     test:assertTrue(out.results.length() == 1);
 
@@ -249,7 +249,7 @@ function testBatchInputDelete() returns error? {
     BatchInputSimplePublicObjectId payload = {
         inputs: [payload1, payload2]
     };
-    http:Response out = check hubSpot->/batch/archive.post(payload = payload);
+    http:Response out = check hubSpotDeals->/batch/archive.post(payload = payload);
     test:assertTrue(out.statusCode == 204);
 
 
