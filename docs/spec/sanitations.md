@@ -28,6 +28,6 @@ This document records the sanitation done on top of the official OpenAPI specifi
 The following command was used to generate the Ballerina client from the OpenAPI specification. The command should be executed from the repository root directory.
 
 ```bash
-bal openapi -i docs/spec/openapi.json --mode client -o ballerina
+bal openapi -i docs/spec/openapi.json --mode client --license docs/license.txt -o ballerina
 ```
 Note: The license year is hardcoded to 2024, change if necessary.
