@@ -180,7 +180,23 @@ import ballerinax/hubspot.crm.obj.deals;
 
 ### Step 3: Use Connector Operations
 
-Now, utilize the available connector operations.
+Utilize the connector's operations to create, update and delete deals etc.
+#### Create a Deal
+```ballerina
+   deals:SimplePublicObjectInputForCreate payload = {
+        properties: {
+            "pipeline": "default",
+            "dealname": "Test Deal",
+            "amount": "100000"
+        }
+    };
+
+    SimplePublicObject out = check hubspot->/.post(payload = payload);
+```
+#### List Deals
+```ballerina
+   deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubspot->/;
+```
 
 ## Examples
 
