@@ -159,14 +159,7 @@ import ballerinax/hubspot.crm.obj.deals;
 
 ### Step 2: Instantiate a new connector
 
-1. Create a `config.toml` file and, configure the obtained credentials in the above steps as follows:
-   ```toml
-   clientId = "<Client ID>"
-   clientSecret = "<Client Secret>"
-   refreshToken = "<Access Token>"
-   ```
-
-2. Create a `deals:ConnectionConfig` with the obtained access token and initialize the connector with it.
+1. Create a `deals:ConnectionConfig` with the obtained access token and initialize the connector with it.
 
    ```ballerina
    configurable deals:OAuth2RefreshTokenGrantConfig auth = {
@@ -176,6 +169,13 @@ import ballerinax/hubspot.crm.obj.deals;
         credentialBearer: oauth2:POST_BODY_BEARER
     };
    final deals:Client hubSpotDeals = check new ({ auth });
+   ```
+
+2. Create a `config.toml` file and, configure the obtained credentials in the above steps as follows:
+   ```toml
+   clientId = "<Client ID>"
+   clientSecret = "<Client Secret>"
+   refreshToken = "<Access Token>"
    ```
 
 ### Step 3: Use Connector Operations

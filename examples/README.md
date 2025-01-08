@@ -9,7 +9,7 @@ The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples ill
 
 1. Generate hubspot credentials to authenticate the connector as described in the [setup guide](README.md).
 
-2. For each example, create a `Config.toml` file the related configuration. Here's an example of how your `Config.toml `file should look:
+2. For each example, create a `Config.toml` file with the related configuration. Here's an example of how your `Config.toml `file should look:
     ```toml
     clientId = "<Client ID>"
     clientSecret = "<Client Secret>"
