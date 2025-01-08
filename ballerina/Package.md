@@ -188,11 +188,12 @@ Utilize the connector's operations to create, update and delete deals etc.
    deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubspot->/;
 ```
 
-## Examples
+# Examples
 
-The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples illustrating usage in various scenarios.Explore these [examples](/examples), covering the following use cases:
+The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples illustrating usage in various scenarios.
 
-1. [Manage Deals](/examples/sales-pipeline) - see how the Hubspot API can be used to create deal and manage it through the sales pipeline.
-2. [Count Deals](/examples/count-deals) - see how the Hubspot API can be used to count the number of deals in each stages of sales pipeline.
+1. [Manage Deals through sales pipeline](../examples/manage-deals) - see how the Hubspot API can be used to create deal and manage it through the sales pipeline.
+2. [Count Deals in stages](../examples/count-deals) - see how the Hubspot API can be used to count the number of deals in each stages of sales pipeline.
+
 
 
