@@ -1,27 +1,21 @@
 import ballerina/io;
-import ballerinax/hubspot.crm.obj.deals;
 import ballerina/oauth2;
+import ballerinax/hubspot.crm.obj.deals;
 
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 
-//auth confguration for hubspot
 deals:OAuth2RefreshTokenGrantConfig auth = {
-    clientId: clientId,
-    clientSecret: clientSecret,
-    refreshToken: refreshToken,
+    clientId,
+    clientSecret,
+    refreshToken,
     credentialBearer: oauth2:POST_BODY_BEARER
-    };
+};
 
-deals:ConnectionConfig config = {auth: auth};
-//authorized http client to access hubspot
-final deals:Client hubspot = check new deals:Client(config);
+final deals:Client hubspot = check new ({auth});
 
-
-
-
-public function main(){
+public function main() {
     deals:SimplePublicObjectInputForCreate payload1 = {
         properties: {
             "pipeline": "default",
@@ -44,29 +38,26 @@ public function main(){
 
     deals:BatchResponseSimplePublicObject|deals:BatchResponseSimplePublicObjectWithErrors|error out = hubspot->/batch/create.post(payload = payloads);
 
-
     if out is deals:BatchResponseSimplePublicObject {
         io:println("Batch Deal 1 created with id: " + out.results[0].id);
         io:println("Batch Deal 2 created with id: " + out.results[1].id);
-        
- 
+
     } else {
         io:println("Failed to create deals");
         return;
     }
 
-
     deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error deals = hubspot->/;
     if deals is deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging {
-    
-    io:println(`Nuber of retreived deals ${deals.results.length()}`);
-    int ct;
 
-    map<int> dealStageCount = {};
+        io:println(`Nuber of retreived deals ${deals.results.length()}`);
+        int ct;
+
+        map<int> dealStageCount = {};
 
         foreach var deal in deals.results {
-            string dealStage =  deal.properties["dealstage"].toString();
-            ct = dealStageCount[dealStage]?:0;
+            string dealStage = deal.properties["dealstage"].toString();
+            ct = dealStageCount[dealStage] ?: 0;
             dealStageCount[dealStage] = ct + 1;
         }
 
@@ -77,9 +68,6 @@ public function main(){
         io:println("Failed to get deals");
         return;
     }
-
-    
-    
 
 }
 

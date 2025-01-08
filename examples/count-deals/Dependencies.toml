@@ -8,6 +8,20 @@ dependencies-toml-version = "2"
 distribution-version = "2201.10.3"
 
 [[package]]
+org = "WSO2"
+name = "count_deals"
+version = "0.1.0"
+dependencies = [
+	{org = "ballerina", name = "io"},
+	{org = "ballerina", name = "oauth2"},
+	{org = "ballerinai", name = "observe"},
+	{org = "ballerinax", name = "hubspot.crm.obj.deals"}
+]
+modules = [
+	{org = "WSO2", packageName = "count_deals", moduleName = "count_deals"}
+]
+
+[[package]]
 org = "ballerina"
 name = "auth"
 version = "2.12.0"
@@ -280,6 +294,9 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "observe"}
 ]
+modules = [
+	{org = "ballerinai", packageName = "observe", moduleName = "observe"}
+]
 
 [[package]]
 org = "ballerinax"
@@ -294,18 +311,5 @@ dependencies = [
 ]
 modules = [
 	{org = "ballerinax", packageName = "hubspot.crm.obj.deals", moduleName = "hubspot.crm.obj.deals"}
-]
-
-[[package]]
-org = "ravinduwe"
-name = "count_deals"
-version = "0.1.0"
-dependencies = [
-	{org = "ballerina", name = "io"},
-	{org = "ballerina", name = "oauth2"},
-	{org = "ballerinax", name = "hubspot.crm.obj.deals"}
-]
-modules = [
-	{org = "ravinduwe", packageName = "count_deals", moduleName = "count_deals"}
 ]
 

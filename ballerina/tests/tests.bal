@@ -6,17 +6,15 @@ import ballerina/test;
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
-configurable string serviceUrl = ?;
 
 OAuth2RefreshTokenGrantConfig auth = {
-    clientId: clientId,
-    clientSecret: clientSecret,
-    refreshToken: refreshToken,
+    clientId,
+    clientSecret,
+    refreshToken,
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-ConnectionConfig config = {auth: auth};
-final Client hubspot = check new Client(config, serviceUrl);
+final Client hubspot = check new ({ auth });
 # keep the deal id as reference for other tests after creation
 string dealId = "";
 
