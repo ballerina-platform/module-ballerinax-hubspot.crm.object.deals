@@ -34,14 +34,10 @@ function testCreateDeals() returns error? {
         }
     };
 
-    SimplePublicObject|error out =hubspot->/.post(payload = payload);
-
-    if out is SimplePublicObject {
-        dealId = out.id;
-        test:assertTrue(out.createdAt !is "");
-    } else {
-        test:assertFail("Failed to create deal");
-    }
+    SimplePublicObject out = check hubspot->/.post(payload = payload);
+    dealId = out.id;
+    test:assertTrue(out.createdAt !is "");
+    
 
 };
 
@@ -49,13 +45,9 @@ function testCreateDeals() returns error? {
     dependsOn: [testCreateDeals]
 }
 function testgetAllDeals() returns error? {
-    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error deals = hubspot->/;
-
-    if deals is CollectionResponseSimplePublicObjectWithAssociationsForwardPaging {
-        test:assertTrue(deals.results.length() > 0);
-    } else {
-        test:assertFail("Failed to get deals");
-    }
+    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubspot->/;
+    test:assertTrue(deals.results.length() > 0);
+    
 
 };
 
@@ -63,13 +55,9 @@ function testgetAllDeals() returns error? {
     dependsOn: [testgetAllDeals]
 }
 function testGetDealById() returns error? {
-    SimplePublicObject|error deal = hubspot->/[dealId].get();
-    if deal is SimplePublicObject {
-        io:println(deal);
-        test:assertTrue(deal.id == dealId);
-    } else {
-        test:assertFail("Failed to get deal");
-    }
+    SimplePublicObject deal =check hubspot->/[dealId].get();
+    io:println(deal);
+    test:assertTrue(deal.id == dealId);
 };
 
 @test:Config {
@@ -83,15 +71,12 @@ function testUpdateDeal() returns error? {
         }
     };
 
-    SimplePublicObject|error out = hubspot->/[dealId].patch(payload = payload);
+    SimplePublicObject out = check  hubspot->/[dealId].patch(payload = payload);
 
-    if out is SimplePublicObject {
-        test:assertTrue(out.updatedAt !is "");
-        test:assertEquals(out.properties["dealname"], "Test Deal Updated");
-        test:assertEquals(out.properties["amount"], "200000");
-    } else {
-        test:assertFail("Failed to update deal");
-    }
+    test:assertTrue(out.updatedAt !is "");
+    test:assertEquals(out.properties["dealname"], "Test Deal Updated");
+    test:assertEquals(out.properties["amount"], "200000");
+
 };
 
 @test:Config {
@@ -108,25 +93,19 @@ function testMergeDeals() returns error? {
         }
     };
 
-    SimplePublicObject|error out = hubspot->/.post(payload = payload);
+    SimplePublicObject out = check  hubspot->/.post(payload = payload);
 
-    if out is SimplePublicObject {
-        dealId2 = out.id;
-        PublicMergeInput payload2 = {
-            objectIdToMerge: dealId2,
-            primaryObjectId: dealId
-        };
-        SimplePublicObject|error mergeOut = hubspot->/merge.post(payload = payload2);
-        if mergeOut is SimplePublicObject {
-            test:assertNotEquals(mergeOut.properties["hs_merged_object_ids"], "");
-            dealId = mergeOut.id;
-        } else {
-            test:assertFail("Failed to create the secondary deal");
-        }
-    } else {
-        test:assertFail("Failed to merge deals");
-    }
+    dealId2 = out.id;
+    PublicMergeInput payload2 = {
+        objectIdToMerge: dealId2,
+        primaryObjectId: dealId
+    };
+    SimplePublicObject mergeOut = check hubspot->/merge.post(payload = payload2);
+        
+    test:assertNotEquals(mergeOut.properties["hs_merged_object_ids"], "");
+    dealId = mergeOut.id;
 
+   
 };
 
 //for the search test case you should alraedy have some deals in the hubspot as it could take some time to index the deals
@@ -138,25 +117,19 @@ function testSearchDeals() returns error? {
     PublicObjectSearchRequest qr = {
         query: "test"
     };
-    CollectionResponseWithTotalSimplePublicObjectForwardPaging|error search = hubspot->/search.post(payload = qr);
-    if search is CollectionResponseWithTotalSimplePublicObjectForwardPaging {
+    CollectionResponseWithTotalSimplePublicObjectForwardPaging search = check hubspot->/search.post(payload = qr);
         test:assertTrue(search.results.length() > 0);
-    } else {
-        test:assertFail("Failed to search deals");
-    }
+ 
 };
 
 @test:Config {
     dependsOn: [testSearchDeals]
 }
 function testDeleteDeal() returns error? {
-    var response = hubspot->/[dealId].delete();
-    if
-        response is http:Response {
-        test:assertTrue(response.statusCode == 204);
-    } else {
-        test:assertFail("Failed to delete deal");
-    }
+    
+    http:Response response = check hubspot->/[dealId].delete();
+    test:assertTrue(response.statusCode == 204);
+ 
 }
 
 @test:Config {
@@ -180,15 +153,11 @@ function testBatchCreate() returns error? {
     BatchInputSimplePublicObjectInputForCreate payloads = {
         inputs: [payload1, payload2]
     };
-    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error out = hubspot->/batch/create.post(payload = payloads);
-
-    if out is BatchResponseSimplePublicObject {
-        test:assertTrue(out.results.length() == 2);
-        batchDealId1 = out.results[0].id;
-        batchDealId2 = out.results[1].id;
-    } else {
-        test:assertFail("Failed to batch create deals");
-    }
+    BatchResponseSimplePublicObject out = check hubspot->/batch/create.post(payload = payloads);
+    test:assertTrue(out.results.length() == 2);
+    batchDealId1 = out.results[0].id;
+    batchDealId2 = out.results[1].id;
+    
 
 }
 
@@ -215,18 +184,16 @@ function testBacthUpdate() returns error? {
     BatchInputSimplePublicObjectBatchInput payloads = {
         inputs: [payload1, payload2]
     };
-    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error out = hubspot->/batch/update.post(payload = payloads);
+    BatchResponseSimplePublicObject out = check hubspot->/batch/update.post(payload = payloads);
 
-    if out is BatchResponseSimplePublicObject {
+
 
         test:assertTrue(out.results.length() == 2);
         SimplePublicObject updatedDeal1 = out.results.filter(function(SimplePublicObject deal) returns boolean {
             return deal.id == batchDealId1;
         })[0];
         test:assertEquals(updatedDeal1.properties["dealname"], "Test Deal1 Updated");
-    } else {
-        test:assertFail("Failed to batch update deals");
-    }
+
 
 }
 
@@ -249,13 +216,9 @@ function testBatchUpsert() returns error? {
     BatchInputSimplePublicObjectBatchInputUpsert payloads = {
         inputs: [payload1]
     };
-    BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors|error out = hubspot->/batch/upsert.post(payload = payloads);
+    BatchResponseSimplePublicUpsertObject out = check  hubspot->/batch/upsert.post(payload = payloads);
     io:println(out);
-    if out is BatchResponseSimplePublicUpsertObject {
-        test:assertTrue(out.results.length() == 1);
-    } else {
-        test:assertFail("Failed to batch upsert deals");
-    }
+    test:assertTrue(out.results.length() == 1);
 
 }
 
@@ -273,13 +236,9 @@ function testBatchInputDelete() returns error? {
     BatchInputSimplePublicObjectId payload = {
         inputs: [payload1, payload2]
     };
-    http:Response|error out = hubspot->/batch/archive.post(payload = payload);
+    http:Response out = check hubspot->/batch/archive.post(payload = payload);
+    test:assertTrue(out.statusCode == 204);
 
-    if out is http:Response {
-        test:assertTrue(out.statusCode == 204);
-    } else {
-        test:assertFail("Failed to batch delete deals");
-    }
 
 }
 
