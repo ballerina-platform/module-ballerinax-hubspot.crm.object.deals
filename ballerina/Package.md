@@ -153,7 +153,11 @@ import ballerinax/hubspot.crm.obj.deals;
 1. Create a `deals:ConnectionConfig` with the obtained access token and initialize the connector with it.
 
    ```ballerina
-   configurable deals:OAuth2RefreshTokenGrantConfig auth = {
+   configurable string clientId = ?;
+   configurable string clientSecret = ?;
+   configurable string refreshToken = ?;
+   
+   deals:OAuth2RefreshTokenGrantConfig auth = {
         clientId,
         clientSecret,
         refreshToken,
