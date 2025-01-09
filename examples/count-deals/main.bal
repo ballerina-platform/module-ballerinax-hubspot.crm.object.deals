@@ -28,7 +28,6 @@ deals:OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-
 public function main() {
     final deals:Client hubSpotDeals = check new ({auth});
     deals:SimplePublicObjectInputForCreate payload1 = {

@@ -30,7 +30,6 @@ deals:OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-
 public function main() {
 
     string dealId = "";
