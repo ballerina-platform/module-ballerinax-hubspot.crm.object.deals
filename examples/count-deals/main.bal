@@ -28,9 +28,10 @@ deals:OAuth2RefreshTokenGrantConfig auth = {
     refreshToken,
     credentialBearer: oauth2:POST_BODY_BEARER
 };
+final deals:Client hubSpotDeals = check new ({auth});
 
 public function main() {
-    final deals:Client hubSpotDeals = check new ({auth});
+
     deals:SimplePublicObjectInputForCreate payload1 = {
         properties: {
             "pipeline": "default",
