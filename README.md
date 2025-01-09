@@ -10,7 +10,7 @@
 
 [HubSpot](https://developers.hubspot.com/docs/reference/api) is is an AI-powered customer platform.
 
-The `ballerinax/hubspot.crm.object.deals` package offers APIs to connect and interact with [HubSpot API](https://developers.hubspot.com/docs/reference/api) endpoints, specifically based on [HubSpot API v3](https://developers.hubspot.com/docs/reference/api).
+The `ballerinax/hubspot.crm.object.deals` package offers APIs to connect and interact with the [HubSpot CRM Deals API](https://developers.hubspot.com/docs/reference/api/crm/objects/deals) endpoints, specifically based on [HubSpot REST API v3](https://developers.hubspot.com/docs/reference/api).
 
 
 ## Setup guide
