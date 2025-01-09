@@ -10,7 +10,7 @@
 
 [HubSpot](https://developers.hubspot.com/docs/reference/api) is is an AI-powered customer platform.
 
-The `ballerinax/hubspot.crm.object.deals` package offers APIs to connect and interact with the [HubSpot CRM Deals API](https://developers.hubspot.com/docs/reference/api/crm/objects/deals) endpoints, specifically based on [HubSpot REST API v3](https://developers.hubspot.com/docs/reference/api).
+The `ballerinax/hubspot.crm.obj.deals` package offers APIs to connect and interact with the [HubSpot CRM Deals API](https://developers.hubspot.com/docs/reference/api/crm/objects/deals) endpoints, specifically based on [HubSpot REST API v3](https://developers.hubspot.com/docs/reference/api).
 
 
 ## Setup guide
@@ -35,7 +35,7 @@ Within app developer accounts, you can create developer test accounts to test ap
 
 2. Click Create developer test account.
 
-   <img src="docs/resources/test_acc_2.png alt="Hubspot developer testacc" style="width: 70%;">
+   <img src="docs/resources/test_acc_2.png" alt="Hubspot developer testacc" style="width: 70%;">
 
 3. In the dialogue box, give a name to your test account and click create.
 
@@ -199,15 +199,15 @@ Utilize the connector's operations to create, update and delete deals etc.
 ```
 #### List Deals
 ```ballerina
-   deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check  hubspot->/;
+   deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging dealsList = check  hubSpotDeals->/;
 ```
 
 ## Examples
 
-The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples illustrating usage in various scenarios.Explore these [examples](/examples), covering the following use cases:
+The `ballerinax/hubspot.crm.obj.deals` connector provides practical examples illustrating usage in various scenarios.Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.deals/tree/main/examples), covering the following use cases:
 
-1. [Manage Deals](/examples/sales-pipeline) - see how the Hubspot API can be used to create deal and manage it through the sales pipeline.
-2. [Count Deals](/examples/count-deals) - see how the Hubspot API can be used to count the number of deals in each stages of sales pipeline.
+1. [Manage Deals](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.deals/tree/main/examples/sales-pipeline) - see how the Hubspot API can be used to create deal and manage it through the sales pipeline.
+2. [Count Deals](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.deals/tree/main/examples/count-deals) - see how the Hubspot API can be used to count the number of deals in each stages of sales pipeline.
 
 
 
@@ -300,7 +300,7 @@ All the contributors are encouraged to read the [Ballerina Code of Conduct](http
 
 ## Useful links
 
-* For more information go to the [`hubspot.crm.object.deals` package](https://central.ballerina.io/ballerinax/hubspot.crm.object.deals/latest).
+* For more information go to the [`hubspot.crm.obj.deals` package](https://central.ballerina.io/ballerinax/hubspot.crm.object.deals/latest).
 * For example demonstrations of the usage, go to [Ballerina By Examples](https://ballerina.io/learn/by-example/).
 * Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
 * Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
