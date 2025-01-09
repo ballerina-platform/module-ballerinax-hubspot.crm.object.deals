@@ -1,5 +1,5 @@
 [package]
-org = "WSO2"
+org = "wso2"
 name = "manage_deals"
 version = "0.1.0"
 
