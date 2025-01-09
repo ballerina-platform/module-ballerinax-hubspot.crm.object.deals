@@ -81,7 +81,6 @@ public function main() {
         }
     } else {
         io:println("Failed to get deals");
-        return;
     }
 
 }
