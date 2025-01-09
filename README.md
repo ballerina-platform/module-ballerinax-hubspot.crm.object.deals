@@ -195,7 +195,7 @@ Utilize the connector's operations to create, update and delete deals etc.
         }
     };
 
-    SimplePublicObject out = check hubSpotDeals->/.post(payload = payload);
+    deals:SimplePublicObject dealCreated = check hubSpotDeals->/.post(payload = payload);
 ```
 #### List Deals
 ```ballerina
