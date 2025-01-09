@@ -17,11 +17,14 @@
 import ballerina/http;
 import ballerina/io;
 import ballerina/oauth2;
+import ballerina/os;
 import ballerina/test;
 
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
+configurable boolean useMockServer = os:getEnv("useMockServer") == "true";
+configurable string serviceUrl = useMockServer ? "http://localhost:9090" : "https://api.hubapi.com/crm/v3/objects/deals";
 
 OAuth2RefreshTokenGrantConfig auth = {
     clientId,
@@ -30,16 +33,17 @@ OAuth2RefreshTokenGrantConfig auth = {
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
-final Client hubSpotDeals = check new ({auth});
+final Client hubSpotDeals = check new ({auth}, serviceUrl);
 # keep the deal id as reference for other tests after creation
 string dealId = "";
 
 string batchDealId1 = "";
 string batchDealId2 = "";
 
-@test:Config
+@test:Config {
+    groups: ["mock_tests"]
+}
 function testCreateDeals() returns error? {
-
     SimplePublicObjectInputForCreate payload = {
         properties: {
             "pipeline": "default",
@@ -55,10 +59,12 @@ function testCreateDeals() returns error? {
 };
 
 @test:Config {
-    dependsOn: [testCreateDeals]
+    dependsOn: [testCreateDeals],
+    groups: ["mock-tests"]
 }
 function testgetAllDeals() returns error? {
     CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check hubSpotDeals->/;
+    io:println("all\n\n\n", deals);
     test:assertTrue(deals.results.length() > 0);
 
 };
