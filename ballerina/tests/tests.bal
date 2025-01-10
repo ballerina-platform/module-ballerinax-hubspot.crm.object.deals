@@ -20,16 +20,15 @@ import ballerina/oauth2;
 import ballerina/os;
 import ballerina/test;
 
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable boolean useMockServer = os:getEnv("useMockServer") == "true";
-configurable string serviceUrl = useMockServer ? "http://localhost:9090" : "https://api.hubapi.com/crm/v3/objects/deals";
-
+configurable string clientId = os:getEnv("clientId");
+configurable string clientSecret = os:getEnv("clientSecret");
+configurable string refreshToken = os:getEnv("refreshToken");
+configurable boolean isLiveServer = os:getEnv("isLiveServer") == "true";
+configurable string serviceUrl = isLiveServer ? "https://api.hubapi.com/crm/v3/objects/deals" : "http://localhost:9090";
 OAuth2RefreshTokenGrantConfig auth = {
-    clientId,
-    clientSecret,
-    refreshToken,
+    clientId: clientId,
+    clientSecret: clientSecret,
+    refreshToken: refreshToken,
     credentialBearer: oauth2:POST_BODY_BEARER
 };
 
@@ -70,7 +69,9 @@ function testgetAllDeals() returns error? {
 };
 
 @test:Config {
-    dependsOn: [testgetAllDeals]
+    dependsOn: [testgetAllDeals],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testGetDealById() returns error? {
     SimplePublicObject deal = check hubSpotDeals->/[dealId].get();
@@ -79,7 +80,9 @@ function testGetDealById() returns error? {
 };
 
 @test:Config {
-    dependsOn: [testGetDealById]
+    dependsOn: [testGetDealById],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testUpdateDeal() returns error? {
     SimplePublicObjectInput payload = {
@@ -98,7 +101,9 @@ function testUpdateDeal() returns error? {
 };
 
 @test:Config {
-    dependsOn: [testUpdateDeal]
+    dependsOn: [testUpdateDeal],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testMergeDeals() returns error? {
 
@@ -128,7 +133,9 @@ function testMergeDeals() returns error? {
 //for the search test case you should alraedy have some deals in the hubspot as it could take some time to index the deals
 
 @test:Config {
-    dependsOn: [testUpdateDeal]
+    dependsOn: [testUpdateDeal],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testSearchDeals() returns error? {
     PublicObjectSearchRequest qr = {
@@ -140,7 +147,9 @@ function testSearchDeals() returns error? {
 };
 
 @test:Config {
-    dependsOn: [testSearchDeals]
+    dependsOn: [testSearchDeals],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testDeleteDeal() returns error? {
 
@@ -150,7 +159,9 @@ function testDeleteDeal() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testDeleteDeal]
+    dependsOn: [testDeleteDeal],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testBatchCreate() returns error? {
     SimplePublicObjectInputForCreate payload1 = {
@@ -178,7 +189,9 @@ function testBatchCreate() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testBatchCreate]
+    dependsOn: [testBatchCreate],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testBacthUpdate() returns error? {
     SimplePublicObjectBatchInput payload1 = {
@@ -214,7 +227,9 @@ function testBacthUpdate() returns error? {
 //my property comes as `test`
 //ref:https://www.youtube.com/watch?v=3p6deGTS12w, 
 @test:Config {
-    dependsOn: [testBacthUpdate]
+    dependsOn: [testBacthUpdate],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testBatchUpsert() returns error? {
     SimplePublicObjectBatchInputUpsert payload1 = {
@@ -236,7 +251,9 @@ function testBatchUpsert() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testBatchUpsert]
+    dependsOn: [testBatchUpsert],
+    groups: ["live_tests"],
+    enable: isLiveServer
 }
 function testBatchInputDelete() returns error? {
     SimplePublicObjectId payload1 = {

@@ -52,26 +52,26 @@ public function main() {
         inputs: [payload1, payload2]
     };
 
-    deals:BatchResponseSimplePublicObject|deals:BatchResponseSimplePublicObjectWithErrors|error out = hubSpotDeals->/batch/create.post(payload = payloads);
+    deals:BatchResponseSimplePublicObject|deals:BatchResponseSimplePublicObjectWithErrors|error dealsCreated = hubSpotDeals->/batch/create.post(payload = payloads);
 
-    if out is deals:BatchResponseSimplePublicObject {
-        io:println("Batch Deal 1 created with id: " + out.results[0].id);
-        io:println("Batch Deal 2 created with id: " + out.results[1].id);
+    if dealsCreated is deals:BatchResponseSimplePublicObject {
+        io:println("Batch Deal 1 created with id: " + dealsCreated.results[0].id);
+        io:println("Batch Deal 2 created with id: " + dealsCreated.results[1].id);
 
     } else {
         io:println("Failed to create deals");
         return;
     }
 
-    deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error deals = hubSpotDeals->/;
-    if deals is deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging {
+    deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error allDeals = hubSpotDeals->/;
+    if allDeals is deals:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging {
 
-        io:println(`Nuber of retreived deals ${deals.results.length()}`);
+        io:println(`Nuber of retreived deals ${allDeals.results.length()}`);
         int ct;
 
         map<int> dealStageCount = {};
 
-        foreach var deal in deals.results {
+        foreach var deal in allDeals.results {
             string dealStage = deal.properties["dealstage"].toString();
             ct = dealStageCount[dealStage] ?: 0;
             dealStageCount[dealStage] = ct + 1;

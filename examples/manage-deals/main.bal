@@ -45,10 +45,10 @@ public function main() {
         }
     };
 
-    deals:SimplePublicObject|error deal = hubSpotDeals->/.post(payload = payload);
+    deals:SimplePublicObject|error dealCreated = hubSpotDeals->/.post(payload = payload);
 
-    if deal is deals:SimplePublicObject {
-        dealId = deal.id;
+    if dealCreated is deals:SimplePublicObject {
+        dealId = dealCreated.id;
         io:println(`A deal created with id ${dealId}`);
 
     } else {

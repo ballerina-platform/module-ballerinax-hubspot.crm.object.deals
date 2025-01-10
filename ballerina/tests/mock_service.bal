@@ -19,8 +19,6 @@ import ballerina/log;
 
 listener http:Listener httpListener = new (9090);
 
-string isLiveServer = "false";
-
 http:Service mockService = service object {
 
     resource function post .(@http:Payload SimplePublicObjectInputForCreate payload) returns SimplePublicObject|http:Response {
@@ -127,7 +125,7 @@ http:Service mockService = service object {
 };
 
 function init() returns error? {
-    if isLiveServer == "true" {
+    if isLiveServer {
         log:printInfo("Skiping mock server initialization as the tests are running on live server");
         return;
     }
