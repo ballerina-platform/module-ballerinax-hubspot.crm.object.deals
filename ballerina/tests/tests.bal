@@ -24,15 +24,27 @@ configurable string clientSecret = os:getEnv("clientSecret");
 configurable string refreshToken = os:getEnv("refreshToken");
 configurable boolean isLiveServer = os:getEnv("isLiveServer") == "true";
 configurable string serviceUrl = isLiveServer ? "https://api.hubapi.com/crm/v3/objects/deals" : "http://localhost:9090";
-OAuth2RefreshTokenGrantConfig auth = {
-    clientId: clientId,
-    clientSecret: clientSecret,
-    refreshToken: refreshToken,
-    credentialBearer: oauth2:POST_BODY_BEARER
-};
 
-final Client hubSpotDeals = check new ({auth}, serviceUrl);
-# keep the deal id as reference for other tests after creation
+
+final Client hubSpotDeals = check initClient();
+
+isolated function initClient() returns Client|error {
+    if isLiveServer {
+        OAuth2RefreshTokenGrantConfig auth = {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            credentialBearer: oauth2:POST_BODY_BEARER
+        };
+        return check new ({auth}, serviceUrl);
+    }
+    return check new ({
+        auth: {
+            token: "test-token"
+        }
+    }, serviceUrl);
+}
+
 string dealId = "";
 
 string batchDealId1 = "";
