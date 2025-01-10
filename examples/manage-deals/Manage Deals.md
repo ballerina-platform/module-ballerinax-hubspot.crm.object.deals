@@ -6,7 +6,7 @@ This use case demonstrates how the `hubspot.crm.object.deals` API can be utilize
 
 ### 1. Setup the Hubspot developer account
 
-Refer to the [Setup guide](README.md#setup-guide) to obtain necessary credentials (client Id, client secret, Refresh tokens).
+Refer to the [Setup guide](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.deals/tree/main/examples/README.md#setup-guide) to obtain necessary credentials (client Id, client secret, Refresh tokens).
 
 ### 2. Configuration
 
