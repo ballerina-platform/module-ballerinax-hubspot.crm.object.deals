@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/io;
 import ballerina/oauth2;
 import ballerina/os;
 import ballerina/test;
@@ -63,7 +62,6 @@ function testCreateDeals() returns error? {
 }
 function testgetAllDeals() returns error? {
     CollectionResponseSimplePublicObjectWithAssociationsForwardPaging deals = check hubSpotDeals->/;
-    io:println("all\n\n\n", deals);
     test:assertTrue(deals.results.length() > 0);
 
 };
@@ -75,7 +73,6 @@ function testgetAllDeals() returns error? {
 }
 function testGetDealById() returns error? {
     SimplePublicObject deal = check hubSpotDeals->/[dealId].get();
-    io:println(deal);
     test:assertTrue(deal.id == dealId);
 };
 
@@ -245,7 +242,6 @@ function testBatchUpsert() returns error? {
         inputs: [payload1]
     };
     BatchResponseSimplePublicUpsertObject out = check hubSpotDeals->/batch/upsert.post(payload = payloads);
-    io:println(out);
     test:assertTrue(out.results.length() == 1);
 
 }
