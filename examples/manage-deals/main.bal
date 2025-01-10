@@ -67,7 +67,6 @@ public function main() {
 
     if newDeal is deals:SimplePublicObject {
         io:println("Successfully updated the deal into a new Stage");
-        io:println(newDeal);
     } else {
         io:println("Failed to Update the deal");
     }

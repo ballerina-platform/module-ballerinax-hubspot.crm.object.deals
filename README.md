@@ -15,8 +15,7 @@ The `ballerinax/hubspot.crm.obj.deals` package offers APIs to connect and intera
 
 ## Setup guide
 
-To use the HubSpot Marketing Events connector, you must have access to the HubSpot API through a HubSpot developer account and a HubSpot App under it. Therefore you need to register for a developer account at HubSpot if you don't have one already.
-
+To use the HubSpot CRM Deals connector, you must have access to the HubSpot API through a HubSpot developer account and a HubSpot App under it. Therefore you need to register for a developer account at HubSpot if you don't have one already.
 ### Step 1: Create/Login to a HubSpot Developer Account
 
 If you have an account already, go to the [HubSpot developer portal](https://app.hubspot.com/)
