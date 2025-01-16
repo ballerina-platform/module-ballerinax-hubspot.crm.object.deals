@@ -61,7 +61,6 @@ Within app developer accounts, you can create developer test accounts to test ap
 - Navigate to the Auth section of your app. Make sure to save the provided Client ID and Client Secret.
 
    ![Getting credentials from auth](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-hubspot.crm.object.deals/main/docs/resources/get_credentials.png)
-
 ### Step 6: Setup Authentication Flow
 
 Before proceeding with the Quickstart, ensure you have obtained the Access Token using the following steps:
@@ -74,55 +73,33 @@ Before proceeding with the Quickstart, ensure you have obtained the Access Token
 
    Replace the `<YOUR_CLIENT_ID>`, `<YOUR_REDIRECT_URI>` and `<YOUR_SCOPES>` with your specific value.
 
-2. Run the Following Ballerina Code Snippet to start the local server which will accept your Oath callbacks;
-
-   ```ballerina
-   import ballerina/http;
-   import ballerina/io;
-   
-   //edit this before running
-   string clientId = "<Client ID>";
-   string clientSecret = "<Client Secret>";
-
-   public function getRefresh(string cd) returns json|error {
-
-      http:Client hubendpoint = check  new("https://api.hubapi.com");
-      string payload = string `grant_type=authorization_code&client_id=${ClientId}&client_secret={clientSecret}&redirect_uri=http://localhost:9090&code=${cd}`;
-
-      // Send the token request
-      json|error response = hubendpoint->post("/oauth/v1/token", payload, {
-         "Content-Type": "application/x-www-form-urlencoded"
-      });
-
-      return response;
-
-   };
-
-   service / on new http:Listener(9090) {
-    resource function get .(http:Caller caller, http:Request req) returns error? {
-        // Extract the "code" query parameter from the URL
-        string? code = req.getQueryParamValue("code");
-
-        if code is string {
-            // Log the received code
-            io:println("Authorization code received: " + code);
-            // Respond to the client with the received code
-            check caller->respond("Received code: " + code);
-            json|error res = getRefresh(code);
-            io:println(res);
-        } else {
-            // Respond with an error message if no code is found
-            check caller->respond("Authorization code not found.");
-        }
-    }
-   };
-   ```
-
-3. Paste it in the browser and select your developer test account to intall the app when prompted.
+2. Paste it in the browser and select your developer test account to intall the app when prompted.
     
    ![Installing the App](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-hubspot.crm.object.deals/main/docs/resources/install_app.png)
 
-4. After the installation, you will be redirected to the localhost server you started in the previous step. The server will print the authorization code in the console.
+3. After the installation, the authroization code will be displayed in the browser URL. Copy the code.
+
+4. Run the following curl command. Replace the `<YOUR_CLIENT_ID>`, `<YOUR_REDIRECT_URI`> and `<YOUR_CLIENT_SECRET>` with your specific value. Use the code you received in the above step 3 as the `<CODE>`.
+
+   - Linux/macOS
+
+     ```bash
+     curl --request POST \
+     --url https://api.hubapi.com/oauth/v1/token \
+     --header 'content-type: application/x-www-form-urlencoded' \
+     --data 'grant_type=authorization_code&code=<CODE>&redirect_uri=<YOUR_REDIRECT_URI>&client_id=<YOUR_CLIENT_ID>&client_secret=<YOUR_CLIENT_SECRET>'
+     ```
+
+   - Windows
+
+     ```bash
+     curl --request POST ^
+     --url https://api.hubapi.com/oauth/v1/token ^
+     --header 'content-type: application/x-www-form-urlencoded' ^
+     --data 'grant_type=authorization_code&code=<CODE>&redirect_uri=<YOUR_REDIRECT_URI>&client_id=<YOUR_CLIENT_ID>&client_secret=<YOUR_CLIENT_SECRET>'
+     ```
+
+   This command will return the access token necessary for API calls.
 
    ```json
    {
@@ -134,7 +111,6 @@ Before proceeding with the Quickstart, ensure you have obtained the Access Token
    ```
 
 5. Store the `refresh_token` securely for use in your application
-
 ## Quickstart
 
 
