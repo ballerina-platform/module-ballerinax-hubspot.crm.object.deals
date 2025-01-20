@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
 import ballerina/io;
 import ballerina/oauth2;
 import ballerinax/hubspot.crm.obj.deals;
@@ -32,7 +31,7 @@ deals:OAuth2RefreshTokenGrantConfig auth = {
 
 final deals:Client hubSpotDeals = check new ({auth});
 
-public function main() {
+public function main() returns error? {
 
     string dealId = "";
 
@@ -63,22 +62,15 @@ public function main() {
         }
     };
 
-    deals:SimplePublicObject|error newDeal = hubSpotDeals->/[dealId].patch(payload = newDealDetails);
-
-    if newDeal is deals:SimplePublicObject {
-        io:println("Successfully updated the deal into a new Stage");
-    } else {
-        io:println("Failed to Update the deal");
-    }
+    deals:SimplePublicObject _ = check  hubSpotDeals->/[dealId].patch(payload = newDealDetails);
+    
+    io:println("Successfully updated the deal into a new Stage");
+ 
 
     //Now all the deal specific things are over time to delete it
-    var response = hubSpotDeals->/[dealId].delete();
-
-    if response is http:Response {
-        io:println("sucessfully deleted the deal");
-    } else {
-        io:println("Failed to delete deal");
-    }
+    var _ = check hubSpotDeals->/[dealId].delete();
+    io:println("sucessfully deleted the deal");
+    
 
 }
 
