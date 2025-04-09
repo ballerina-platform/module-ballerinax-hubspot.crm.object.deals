@@ -35,20 +35,16 @@ public type CollectionResponseAssociatedId record {
     AssociatedId[] results;
 };
 
-# Represents the Queries record for the operation: get-/crm/v3/objects/deals_getPage
-public type GetCrmV3ObjectsDeals_getpageQueries record {
-    # A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
-    string[] associations?;
-    # Whether to return only results that have been archived.
+# Represents the Queries record for the operation: patch-/crm/v3/objects/deals/{dealId}_update
+public type PatchCrmV3ObjectsDealsDealIdUpdateQueries record {
+    # The name of a property whose values are unique for this object
+    string idProperty?;
+};
+
+# Represents the Queries record for the operation: post-/crm/v3/objects/deals/batch/read_read
+public type PostCrmV3ObjectsDealsBatchReadReadQueries record {
+    # Whether to return only results that have been archived
     boolean archived = false;
-    # A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of objects that can be read by a single request.
-    string[] propertiesWithHistory?;
-    # The maximum number of results to display per page.
-    int:Signed32 'limit = 10;
-    # The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results.
-    string after?;
-    # A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
-    string[] properties?;
 };
 
 public type PublicAssociationsForObject record {
@@ -74,26 +70,12 @@ public type ErrorDetail record {
     string subCategory?;
     # The status code associated with the error detail
     string code?;
-    # The name of the field or parameter in which the error was found.
+    # The name of the field or parameter in which the error was found
     string 'in?;
     # Context about the error condition
     record {|string[]...;|} context?;
     # A human readable message describing the error along with remediation steps where appropriate
     string message;
-};
-
-# Represents the Queries record for the operation: get-/crm/v3/objects/deals/{dealId}_getById
-public type GetCrmV3ObjectsDealsDealid_getbyidQueries record {
-    # A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
-    string[] associations?;
-    # Whether to return only results that have been archived.
-    boolean archived = false;
-    # A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
-    string[] propertiesWithHistory?;
-    # The name of a property whose values are unique for this object
-    string idProperty?;
-    # A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
-    string[] properties?;
 };
 
 public type ForwardPaging record {
@@ -179,31 +161,40 @@ public type ConnectionConfig record {|
     # The HTTP version understood by the client
     http:HttpVersion httpVersion = http:HTTP_2_0;
     # Configurations related to HTTP/1.x protocol
-    ClientHttp1Settings http1Settings?;
+    http:ClientHttp1Settings http1Settings = {};
     # Configurations related to HTTP/2 protocol
-    http:ClientHttp2Settings http2Settings?;
+    http:ClientHttp2Settings http2Settings = {};
     # The maximum time to wait (in seconds) for a response before closing the connection
-    decimal timeout = 60;
+    decimal timeout = 30;
     # The choice of setting `forwarded`/`x-forwarded` header
     string forwarded = "disable";
+    # Configurations associated with Redirection
+    http:FollowRedirects followRedirects?;
     # Configurations associated with request pooling
     http:PoolConfiguration poolConfig?;
     # HTTP caching related configurations
-    http:CacheConfig cache?;
+    http:CacheConfig cache = {};
     # Specifies the way of handling compression (`accept-encoding`) header
     http:Compression compression = http:COMPRESSION_AUTO;
     # Configurations associated with the behaviour of the Circuit Breaker
     http:CircuitBreakerConfig circuitBreaker?;
     # Configurations associated with retrying
     http:RetryConfig retryConfig?;
+    # Configurations associated with cookies
+    http:CookieConfig cookieConfig?;
     # Configurations associated with inbound response size limits
-    http:ResponseLimitConfigs responseLimits?;
+    http:ResponseLimitConfigs responseLimits = {};
     # SSL/TLS-related options
     http:ClientSecureSocket secureSocket?;
     # Proxy server related options
     http:ProxyConfig proxy?;
+    # Provides settings related to client socket configuration
+    http:ClientSocketConfig socketConfig = {};
     # Enables the inbound payload validation functionality which provided by the constraint package. Enabled by default
     boolean validation = true;
+    # Enables relaxed data binding on the client side. When enabled, `nil` values are treated as optional, 
+    # and absent fields are handled as `nilable` types. Enabled by default.
+    boolean laxDataBinding = true;
 |};
 
 public type PublicObjectId record {
@@ -242,34 +233,9 @@ public type BatchResponseSimplePublicObjectWithErrors record {
     "PENDING"|"PROCESSING"|"CANCELED"|"COMPLETE" status;
 };
 
-# Proxy server configurations to be used with the HTTP client endpoint.
-public type ProxyConfig record {|
-    # Host name of the proxy server
-    string host = "";
-    # Proxy server port
-    int port = 0;
-    # Proxy server username
-    string userName = "";
-    # Proxy server password
-    @display {label: "", kind: "password"}
-    string password = "";
-|};
-
-# Represents the Queries record for the operation: post-/crm/v3/objects/deals/batch/read_read
-public type PostCrmV3ObjectsDealsBatchRead_readQueries record {
-    # Whether to return only results that have been archived.
-    boolean archived = false;
-};
-
 public type SimplePublicObjectInput record {
     string objectWriteTraceId?;
     record {|string...;|} properties;
-};
-
-# Represents the Queries record for the operation: patch-/crm/v3/objects/deals/{dealId}_update
-public type PatchCrmV3ObjectsDealsDealid_updateQueries record {
-    # The name of a property whose values are unique for this object
-    string idProperty?;
 };
 
 public type CollectionResponseSimplePublicObjectWithAssociationsForwardPaging record {
@@ -307,27 +273,17 @@ public type Filter record {
     "EQ"|"NEQ"|"LT"|"LTE"|"GT"|"GTE"|"BETWEEN"|"IN"|"NOT_IN"|"HAS_PROPERTY"|"NOT_HAS_PROPERTY"|"CONTAINS_TOKEN"|"NOT_CONTAINS_TOKEN" operator;
 };
 
-# Provides settings related to HTTP/1.x protocol.
-public type ClientHttp1Settings record {|
-    # Specifies whether to reuse a connection for multiple requests
-    http:KeepAlive keepAlive = http:KEEPALIVE_AUTO;
-    # The chunking behaviour of the request
-    http:Chunking chunking = http:CHUNKING_AUTO;
-    # Proxy server related options
-    ProxyConfig proxy?;
-|};
-
 public type PreviousPage record {
     string before;
     string link?;
 };
 
-public type BatchInputSimplePublicObjectBatchInput record {
-    SimplePublicObjectBatchInput[] inputs;
-};
-
 public type BatchInputSimplePublicObjectInputForCreate record {
     SimplePublicObjectInputForCreate[] inputs;
+};
+
+public type BatchInputSimplePublicObjectBatchInput record {
+    SimplePublicObjectBatchInput[] inputs;
 };
 
 public type SimplePublicUpsertObject record {
@@ -348,6 +304,20 @@ public type SimplePublicObjectBatchInput record {
     record {|string...;|} properties;
 };
 
+# Represents the Queries record for the operation: get-/crm/v3/objects/deals/{dealId}_getById
+public type GetCrmV3ObjectsDealsDealIdGetByIdQueries record {
+    # A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored
+    string[] associations?;
+    # Whether to return only results that have been archived
+    boolean archived = false;
+    # A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored
+    string[] propertiesWithHistory?;
+    # The name of a property whose values are unique for this object
+    string idProperty?;
+    # A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored
+    string[] properties?;
+};
+
 public type NextPage record {
     string link?;
     string after;
@@ -360,12 +330,28 @@ public type AssociatedId record {
 
 # Provides API key configurations needed when communicating with a remote HTTP endpoint.
 public type ApiKeysConfig record {|
-    string private\-app\-legacy;
-    string private\-app;
+    string privateAppLegacy;
+    string privateApp;
 |};
 
 public type SimplePublicObjectInputForCreate record {
     PublicAssociationsForObject[] associations?;
     string objectWriteTraceId?;
     record {|string...;|} properties;
+};
+
+# Represents the Queries record for the operation: get-/crm/v3/objects/deals_getPage
+public type GetCrmV3ObjectsDealsGetPageQueries record {
+    # A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored
+    string[] associations?;
+    # Whether to return only results that have been archived
+    boolean archived = false;
+    # A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of objects that can be read by a single request
+    string[] propertiesWithHistory?;
+    # The maximum number of results to display per page
+    int:Signed32 'limit = 10;
+    # The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results
+    string after?;
+    # A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored
+    string[] properties?;
 };
