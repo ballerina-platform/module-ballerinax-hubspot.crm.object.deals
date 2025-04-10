@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
 import ballerina/oauth2;
 import ballerina/os;
 import ballerina/test;
@@ -162,8 +161,8 @@ function testSearchDeals() returns error? {
 }
 function testDeleteDeal() returns error? {
 
-    http:Response response = check hubSpotDeals->/[dealId].delete();
-    test:assertTrue(response.statusCode == 204);
+    error? response = check hubSpotDeals->/[dealId].delete();
+    test:assertTrue(response == ());
 
 }
 
@@ -274,8 +273,6 @@ function testBatchInputDelete() returns error? {
     BatchInputSimplePublicObjectId payload = {
         inputs: [payload1, payload2]
     };
-    http:Response out = check hubSpotDeals->/batch/archive.post(payload = payload);
-    test:assertTrue(out.statusCode == 204);
-
+    error? out = check hubSpotDeals->/batch/archive.post(payload = payload);
+    test:assertTrue(out == ());
 }
-
